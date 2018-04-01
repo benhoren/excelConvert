@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class processData extends Funcs{
 
 	static String[][] summary; 
+	static String newfilename = "output";
 
 	public static void play(String[][] sheet){
 		fixData(sheet);
@@ -15,9 +16,11 @@ public class processData extends Funcs{
 		ArrayList <oneCase> proedcases = processData(unprocases);
 		System.out.println(proedcases.size());
 
-		readyFiles("fold", "output");
+		newfilename = readyFiles(newfilename);
 		oneCase.toFile(proedcases, mainSheet);
 		closeWriters();
+		
+		openFile(newfilename);
 	}
 
 

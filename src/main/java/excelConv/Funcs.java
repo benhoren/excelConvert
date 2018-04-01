@@ -1,5 +1,6 @@
 package excelConv;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -19,8 +20,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class Funcs {
 
-
-	static final String outputFold = "output";
 
 	/**
 	 * function to process a full excel sheet to string matrix
@@ -112,10 +111,9 @@ public class Funcs {
 	static FileOutputStream outputStream;
 	static XSSFSheet mainSheet;
 
-	public static void readyFiles(String path, String fileName){
+	public static String readyFiles(String fileName){
 		boolean ok =false;
 		int i=1;
-		
 
 		startWriters();
 
@@ -123,6 +121,7 @@ public class Funcs {
 		if (!directory.exists()){
 			try {
 				outputStream = new FileOutputStream(fileName+".xlsx");
+				return fileName;
 			} catch (FileNotFoundException e) {}
 		}
 
@@ -135,11 +134,13 @@ public class Funcs {
 					try {
 						outputStream = new FileOutputStream(fileName+"-"+j+".xlsx");
 						ok =true;
+						return fileName+"-"+j;
 					} catch (FileNotFoundException e) {}
 				}
 				j++;
 			}
 		}
+		return "";
 	}
 
 	public static void startWriters(){
@@ -168,6 +169,15 @@ public class Funcs {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void openFile(String filename){
+		try {
+			Desktop.getDesktop().edit(new File(filename+".xlsx"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
