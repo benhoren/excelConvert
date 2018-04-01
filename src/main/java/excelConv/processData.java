@@ -3,15 +3,43 @@ package excelConv;
 import java.util.ArrayList;
 
 
-public class processData {
+public class processData extends Funcs{
 
 	static String[][] summary; 
-	
+
 	public static void play(String[][] sheet){
 		fixData(sheet);
 		printSheet(sheet);
 		ArrayList <oneCase> unprocases= splitToCases(sheet);
+
+		ArrayList <oneCase> proedcases = processData(unprocases);
+		System.out.println(proedcases.size());
+
+		readyFiles("fold", "output");
+		oneCase.toFile(proedcases, mainSheet);
+		closeWriters();
 	}
+
+
+	private static ArrayList<oneCase> processData(ArrayList<oneCase> unprocases) {
+		ArrayList <oneCase> proedcases  = new ArrayList <oneCase> ();
+
+		oneCase cs = null;
+		boolean ok = false;
+		for(int i=0; i<unprocases.size(); i++){
+			ok = false;
+			cs = unprocases.get(i); 
+			ok = cs.process();
+			if(ok){
+				proedcases.add(cs);
+			}
+		}
+
+		return proedcases;
+	}
+
+
+
 
 
 	private static ArrayList<oneCase> splitToCases(String[][] sheet) {
@@ -42,7 +70,7 @@ public class processData {
 		mat = null;
 		boolean ok = true;
 		for(int i=start+2; i<sheet.length; i++){
-			
+
 			if((sheet[i]!=null)&&(sheet[i][0]!=null)&&(sheet[i][0].contains("****")))
 				break;
 
@@ -81,7 +109,7 @@ public class processData {
 						i++;
 						count = 1;
 						break;
-						
+
 					}
 				}
 			}
@@ -89,7 +117,7 @@ public class processData {
 
 		summary = cases.get(cases.size()-1).unProcessedData;
 		cases.remove(cases.size()-1);
-		
+
 		System.out.println();
 		System.out.println("size: "+cases.size());
 		System.out.println();
@@ -97,13 +125,13 @@ public class processData {
 		for(oneCase cs : cases){
 			System.out.println("****************");
 			mat = cs.unProcessedData;
-			
+
 			if(mat == null) {System.out.println("null");continue;}
 			printSheet(mat);
 
 		}
 
-		
+
 
 		return cases;
 
