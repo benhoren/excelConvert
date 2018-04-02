@@ -5,7 +5,7 @@
 	<groupId>org.springframework</groupId>
 	<artifactId>excelConv</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0</version>
+	<version>1.6</version>
 	
 
 

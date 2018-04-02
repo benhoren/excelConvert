@@ -56,7 +56,7 @@ public class oneCase {
 
 			Testsname = unProcessedData[1][2].trim();
 			for(int i=2; i<unProcessedData.length-2; i++){
-				Testsname += "| "+ unProcessedData[i][2].trim();
+				Testsname += " | "+ unProcessedData[i][2].trim();
 			}
 
 			TotalWithVAT = unProcessedData[unProcessedData.length-1][1].trim();
@@ -64,21 +64,20 @@ public class oneCase {
 			// о"то + л"дс         47.60 о"то            280.00 л"дс                    
 			String summ = unProcessedData[unProcessedData.length-1][2].trim().replaceAll("\\s+", " ");
 			String[] arr = summ.split(" ");
-			System.out.println(Arrays.toString(arr));
-
+			
 			VAT = arr[3];
 			Total = arr[5];
 
 			try{
 				Double d = Double.parseDouble(TotalWithVAT.replaceAll("\\s", ""));
-				System.out.println(d);
+//				System.out.println(d);
 				d = Double.parseDouble(new DecimalFormat("#####.##").format(d));
-				System.out.println(d);
+//				System.out.println(d);
 				TotalWithVAT = d+"0";
 			}catch(Exception e){}
 
 			System.out.println(Arrays.toString(toArray()));
-		}catch(Exception e){e.printStackTrace();return false;}
+		}catch(Exception e){System.err.println(e); return false;}
 
 
 		return true;

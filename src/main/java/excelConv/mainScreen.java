@@ -22,7 +22,7 @@ public class mainScreen {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
+		EventQueue.invokeLater(new Runnable() { 
 			public void run() {
 				try {
 					mainScreen window = new mainScreen();
@@ -52,8 +52,8 @@ public class mainScreen {
 
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("Excel File", "xlsx", "xlsm");
-		fileChooser.setFileFilter(filter);
+//		FileNameExtensionFilter filter = new FileNameExtensionFilter("Excel File", "xlsx", "xlsm", "xls");
+//		fileChooser.setFileFilter(filter);
 		
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
@@ -79,9 +79,18 @@ public class mainScreen {
 		int result = fileChooser.showOpenDialog(frame);
 		if (result == JFileChooser.APPROVE_OPTION) {
 			File selectedFile = fileChooser.getSelectedFile();
-			System.out.println("Selected file: " + selectedFile.getAbsolutePath());
-			String[][] sheet = Funcs.readExcel(selectedFile.getAbsolutePath());
-			processData.play(sheet);
+			
+			String path = selectedFile.getAbsolutePath();
+			
+			System.out.println("Selected file: " + path);
+			
+			Main.main(path);
+			
+			
+//			String[][] sheet = Funcs.readExcel(selectedFile.getAbsolutePath());
+//			processData.play(sheet);
+			
+			
 		}
 
 
