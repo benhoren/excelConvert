@@ -10,10 +10,15 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Scanner;
+import java.util.stream.Stream;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Font;
@@ -38,18 +43,18 @@ public class Main {
 
 		String[][] sheet = Funcs.readExcel(inputxl);
 		processData.play(sheet);
-		
-		deleteTmps();
+
+				deleteTmps();
 	}
-	
+
 
 	static final String tmp1 = "tmp1";
 	static String xltmp = "input";
 
 	public static void copyFile( File from, File to ) throws IOException {
-	    Files.copy( from.toPath(), to.toPath() );
+		Files.copy( from.toPath(), to.toPath() );
 	}
-	
+
 
 	/**
 	 * from unknown file type, to .csv, expand the csv and then from csv to an excel file .xlsx
@@ -57,20 +62,21 @@ public class Main {
 	 */
 	public static String unknown_Csv_Excel(String path){
 		File file = new File(path);
-		
+
 		String oldname = path;
 		file.renameTo(new File(tmp1));
 		file = new File(tmp1);
-		
+
 		File dirFrom = new File(tmp1);
 		File dirTo = new File(oldname);
 		try {
-		        copyFile(dirFrom, dirTo);
+			copyFile(dirFrom, dirTo);
 		} catch (IOException ex) {
 			ex.printStackTrace(); 
 		}
-		
-		
+
+
+
 
 		FileReader fr;
 		BufferedReader br;
@@ -78,35 +84,70 @@ public class Main {
 
 		try {
 
-			fr = new FileReader(file);
-			br = new BufferedReader(fr);
+
+//			FileInputStream fis = new FileInputStream(file);
+//			InputStreamReader isr = new InputStreamReader(fis, Charset.forName("ISO-8859-1"));
+//			System.out.println(isr.getEncoding());
+//			try
+//			{
+//				while (isr.ready())
+//				{
+//					System.out.print("" + (char) isr.read());
+//				}
+//			} catch (IOException e)
+//			{
+//				throw e;
+//			} finally
+//			{
+//
+//				isr.close();
+//			}
+
+			//			fr = new FileReader(file);
+			//			br = new BufferedReader(fr);
+			//			br  = new BufferedReader(new InputStreamReader(new FileInputStream(file), "Cp1252"));
+			//			 br = new BufferedReader(new InputStreamReader(new FileInputStream(file), Charset.forName("ISO-8859-1")));
+			//			Scanner in = new Scanner(new FileReader(file));
+						br = new BufferedReader (new InputStreamReader(new FileInputStream(file),Charset.forName("iso-8859-8")));
+						xltmp = readyFiles(xltmp);
+//						System.out.println(br.as);
+						
+					
+//						OutputStream youInputStream ;
+//						Writer out = new OutputStreamWriter(youInputStream , "UTF-8");
+//
+//						out.write(yourText);
+
+
+						
+
+			//			System.err.println("ENCODING"+fr.getEncoding());
+
+						String str  = br.readLine();
 			
-			xltmp = readyFiles(xltmp);
+						while(str != null){
 			
+							System.out.println(str);
 			
-			System.err.println("ENCODING"+fr.getEncoding());
-
-			String str  = br.readLine();
-
-			while(str != null){
-
-				System.out.println(str);
-
-				if(str.contains("³")){
-					str = str.replaceAll("³", ",");
-				}
-				StringArrToLastRow(str.split(","),mainSheet, false);
-				
-				
-				str = br.readLine();
-			}
+//							String decodedToUTF8 = new String(str.getBytes("ISO-8859-1"), "UTF-8");
 	
-			fr.close();
-			br.close();
+//							System.out.println(decodedToUTF8);
+							
+							if(str.contains("³")){
+								str = str.replaceAll("³", ",");
+							}
+							StringArrToLastRow(str.split(","),mainSheet, false);
+							
+							
+							str = br.readLine();
+						}
+				
+			//			fr.close();
+						br.close();
+						
+						closeWriters();
 			
-			closeWriters();
-
-
+			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -114,23 +155,23 @@ public class Main {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-
-//		try {
-//			DataConvertionUtil.csvToEXCEL(tmp2, xltmp);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-		
-		xltmp = xltmp+".xlsx";
+		//
+		//
+		////		try {
+		////			DataConvertionUtil.csvToEXCEL(tmp2, xltmp);
+		////		} catch (Exception e) {
+		////			e.printStackTrace();
+		////		}
+		//		
+				xltmp = xltmp+".xlsx";
 		return xltmp;
 	}
 
-	
+
 	public static void deleteTmps(){
 		File f1 = new File(tmp1);
 		File f3 = new File(xltmp);
-		
+
 		try{
 			if(f1.exists())
 				f1.delete();
@@ -139,13 +180,13 @@ public class Main {
 		}catch(Exception e){e.printStackTrace();}
 	}
 
-	
-	
+
+
 
 	static XSSFWorkbook workbook;
 	static FileOutputStream outputStream;
 	static XSSFSheet mainSheet;
-	
+
 	public static String readyFiles(String fileName){
 		boolean ok =false;
 		int i=1;
@@ -177,7 +218,7 @@ public class Main {
 		}
 		return "";
 	}
-	
+
 	public static void startWriters(){
 		workbook = new XSSFWorkbook();
 		mainSheet = workbook.createSheet("summary");
